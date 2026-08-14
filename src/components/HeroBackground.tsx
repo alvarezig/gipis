@@ -47,6 +47,9 @@ const SPARKLES = [
 
 export default function HeroBackground() {
   const ref = useRef<HTMLDivElement>(null);
+  const isMobile =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 768px)').matches;
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],
@@ -56,21 +59,21 @@ export default function HeroBackground() {
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -BLOBS[1].parallax * 320]);
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -BLOBS[2].parallax * 320]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -BLOBS[3].parallax * 320]);
-  const parallaxY = [y1, y2, y3, y4];
+  const parallaxY = isMobile ? [0, 0, 0, 0] : [y1, y2, y3, y4];
 
   const ringY = useTransform(scrollYProgress, [0, 1], [0, -140]);
   const ringY2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
     <div className="hero-bg" ref={ref}>
-      <motion.div className="hero-ring-bg r1" style={{ y: ringY }}>
+      <motion.div className="hero-ring-bg r1" style={{ y: isMobile ? 0 : ringY }}>
         <motion.div
           className="hero-ring-spin"
           animate={{ rotate: 360 }}
           transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
         />
       </motion.div>
-      <motion.div className="hero-ring-bg r2" style={{ y: ringY2 }}>
+      <motion.div className="hero-ring-bg r2" style={{ y: isMobile ? 0 : ringY2 }}>
         <motion.div
           className="hero-ring-spin"
           animate={{ rotate: -360 }}
@@ -87,7 +90,7 @@ export default function HeroBackground() {
           <motion.div
             className={blob.className}
             style={{ width: blob.size, height: blob.size }}
-            animate={blob.drift}
+            animate={isMobile ? { opacity: [0.75, 1, 0.75] } : blob.drift}
             transition={{
               duration: blob.duration,
               repeat: Infinity,
