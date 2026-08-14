@@ -15,7 +15,7 @@ export function formatWhatsAppDisplay(number: string = WHATSAPP_NUMBER): string 
   return `+${number}`;
 }
 
-export const SITE_URL = '';
+export const SITE_URL = 'https://gipis.vercel.app';
 
 export const costLabel = (cost: number) =>
   cost === 0 ? 'Gratis' : `$ ${cost.toLocaleString('es-AR')}`;
