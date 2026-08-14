@@ -17,6 +17,20 @@ const Track = () => (
 );
 
 export default function Marquee() {
+  const isMobile =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 768px)').matches;
+
+  if (isMobile) {
+    return (
+      <div className="marquee marquee-swipe" aria-label="Características">
+        {ITEMS.map((item, i) => (
+          <span key={i}>✦ {item}</span>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="marquee">
       <motion.div
