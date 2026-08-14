@@ -17,23 +17,4 @@ export function formatWhatsAppDisplay(number: string = WHATSAPP_NUMBER): string 
 
 export const SITE_URL = 'https://gipis.vercel.app';
 
-export const costLabel = (cost: number) =>
-  cost === 0 ? 'Gratis' : `$ ${cost.toLocaleString('es-AR')}`;
-
-export type ShippingZone = {
-  id: string;
-  maxKm: number;
-  cost: number;
-  label: string;
-};
-
-export const SHIPPING_ZONES: ShippingZone[] = [
-  { id: 'retiro', maxKm: 5, cost: 0, label: 'Retiro en tienda' },
-  { id: 'cercana', maxKm: 12, cost: 4000, label: 'Zona cercana' },
-  { id: 'media', maxKm: 25, cost: 6500, label: 'Zona media' },
-  { id: 'lejana', maxKm: 40, cost: 9000, label: 'Zona lejana' },
-];
-
-export const MAX_SHIPPING_KM = 40;
-
 export const STORE_COORDS = { lat: -34.73849, lng: -58.42443 };

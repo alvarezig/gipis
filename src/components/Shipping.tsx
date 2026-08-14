@@ -1,7 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import Reveal from './Reveal';
-import { SHIPPING_ZONES, MAX_SHIPPING_KM, costLabel } from '../config';
 
 const ShippingMap = lazy(() => import('./ShippingMap'));
 
@@ -54,7 +53,8 @@ export default function Shipping() {
           </Reveal>
           <Reveal delay={0.2}>
             <p className="lead">
-              Elegí tu zona en el mapa y calculamos el costo de envío al instante.
+              Buscá tu dirección o hacé clic en el mapa y consultanos por
+              WhatsApp cuándo llega tu envío.
             </p>
           </Reveal>
         </div>
@@ -68,20 +68,10 @@ export default function Shipping() {
             </LazyOnView>
           </div>
 
-          <div className="shipping-legend">
-            {SHIPPING_ZONES.map((z) => (
-              <div className="shipping-legend-item" key={z.id}>
-                <span className={`zone-dot z-${z.id}`} />
-                <span className="shipping-legend-label">{z.label}</span>
-                <span className="shipping-legend-cost">{costLabel(z.cost)}</span>
-              </div>
-            ))}
-            <p className="shipping-note">
-              Costos orientativos · hasta {MAX_SHIPPING_KM} km desde nuestra
-              tienda. Hacé clic en el mapa para calcular tu envío. También podés
-              retirar gratis en tienda.
-            </p>
-          </div>
+          <p className="shipping-note">
+            Coordinamos la entrega por WhatsApp. También podés retirar gratis
+            en tienda o pactar un punto de encuentro.
+          </p>
         </Reveal>
       </div>
     </section>

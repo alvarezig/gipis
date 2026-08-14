@@ -1,15 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {
-  SHIPPING_ZONES,
-  STORE_COORDS,
-  waLink,
-  costLabel,
-} from '../config';
-import type { ShippingZone } from '../config';
+import { STORE_COORDS, waLink } from '../config';
 
-type Result = { distKm: number; zone: ShippingZone | null };
+type Result = { distKm: number };
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
@@ -53,20 +47,8 @@ export default function ShippingMap() {
       maxZoom: 19,
     }).addTo(map);
 
-    SHIPPING_ZONES.forEach((z) => {
-      L.circle([STORE_COORDS.lat, STORE_COORDS.lng], {
-        radius: z.maxKm * 1000,
-        color: '#a68b5f',
-        weight: 1,
-        opacity: 0.35,
-        fillColor: '#c9b18c',
-        fillOpacity: 0.1,
-      }).addTo(map);
-    });
-
     const handlePick = (lat: number, lng: number, label?: string) => {
       const distKm = haversineKm(STORE_COORDS, { lat, lng });
-      const zone = SHIPPING_ZONES.find((z) => distKm <= z.maxKm) ?? null;
       if (markerRef.current) markerRef.current.remove();
       markerRef.current = L.circleMarker([lat, lng], {
         radius: 9,
@@ -79,7 +61,7 @@ export default function ShippingMap() {
         .bindTooltip(label ?? 'Tu zona', { direction: 'top' })
         .openTooltip();
       map.panTo([lat, lng]);
-      setResult({ distKm, zone });
+      setResult({ distKm });
       setAddress(label ?? '');
     };
 
@@ -143,41 +125,25 @@ export default function ShippingMap() {
 
       {result && (
         <div className="shipping-result">
-          {result.zone ? (
-            <>
-              <p>
-                <strong>{address || 'Tu zona'}:</strong>{' '}
-                {result.zone.label} · ~{Math.round(result.distKm)} km
-              </p>
-              <p className="shipping-result-cost">
-                Envío estimado:{' '}
-                <strong>{costLabel(result.zone.cost)}</strong>
-              </p>
-            </>
-          ) : (
-            <p>
-              Estás a ~{Math.round(result.distKm)} km de la tienda, fuera de
-              nuestras zonas de entrega. Podés retirar gratis en tienda o
-              consultarnos.
-            </p>
-          )}
+          <p>
+            <strong>{address || 'Tu zona'}</strong> · ~
+            {Math.round(result.distKm)} km
+          </p>
           <div className="shipping-actions">
-            {!result.zone && (
-              <a
-                className="btn btn-primary"
-                href={waLink(
-                  `Hola Gipi's! Quiero coordinar el envío de un nido. Mi dirección es ${address || 'mi zona'}, a unos ${Math.round(result.distKm)} km de la tienda. Quedo fuera de sus zonas de entrega. ¿Cómo podemos coordinar?`,
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Consultar por WhatsApp
-              </a>
-            )}
+            <a
+              className="btn btn-primary"
+              href={waLink(
+                `Hola Gipi's! Quiero saber cuándo podría llegar el envío de un nido a ${address || 'mi zona'} (a unos ${Math.round(result.distKm)} km de la tienda). ¿Cuándo podrían llegar?`,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Consultar envío por WhatsApp
+            </a>
             <a
               className="btn btn-outline"
               href={waLink(
-                `Hola Gipi's! Quiero organizar un punto de encuentro para el pedido. Mi dirección de referencia es ${address || 'mi zona'}, a unos ${Math.round(result.distKm)} km de la tienda. ¿Dónde coordinamos?`,
+                `Hola Gipi's! Quiero organizar un punto de encuentro para el pedido. Mi dirección de referencia es ${address || 'mi zona'}. ¿Dónde coordinamos?`,
               )}
               target="_blank"
               rel="noopener noreferrer"
