@@ -487,8 +487,6 @@
   padding: 16px 0;
 }
 .marquee-swipe {
-  display: flex;
-  gap: 48px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
@@ -502,6 +500,21 @@
 }
 .marquee-swipe::-webkit-scrollbar {
   display: none;
+}
+.marquee-track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  animation: marquee-x 30s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 .marquee span {
   font-family: 'Cormorant Garamond', serif;
