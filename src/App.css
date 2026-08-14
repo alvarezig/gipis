@@ -1502,20 +1502,26 @@ footer p {
     font-size: 1.05rem;
   }
   .hero-blob {
-    filter: blur(50px);
+    filter: blur(28px);
   }
   .hero-blob.b1,
   .hero-blob.b2,
   .hero-blob.b4 {
-    opacity: 0.75;
+    opacity: 0.7;
   }
   .hero-ring-bg.r1 {
-    width: 440px;
-    height: 440px;
+    width: 380px;
+    height: 380px;
   }
   .hero-ring-bg.r2 {
-    width: 320px;
-    height: 320px;
+    width: 280px;
+    height: 280px;
+  }
+  .hero-sparkle {
+    display: none;
+  }
+  .chat-label {
+    animation: none;
   }
   .container {
     padding: 0 18px;

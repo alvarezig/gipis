@@ -67,18 +67,26 @@ export default function HeroBackground() {
   return (
     <div className="hero-bg" ref={ref}>
       <motion.div className="hero-ring-bg r1" style={{ y: isMobile ? 0 : ringY }}>
-        <motion.div
-          className="hero-ring-spin"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-        />
+        {isMobile ? (
+          <div className="hero-ring-spin" />
+        ) : (
+          <motion.div
+            className="hero-ring-spin"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+          />
+        )}
       </motion.div>
       <motion.div className="hero-ring-bg r2" style={{ y: isMobile ? 0 : ringY2 }}>
-        <motion.div
-          className="hero-ring-spin"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 85, repeat: Infinity, ease: 'linear' }}
-        />
+        {isMobile ? (
+          <div className="hero-ring-spin" />
+        ) : (
+          <motion.div
+            className="hero-ring-spin"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 85, repeat: Infinity, ease: 'linear' }}
+          />
+        )}
       </motion.div>
 
       {BLOBS.map((blob, i) => (
@@ -87,42 +95,36 @@ export default function HeroBackground() {
           className="hero-blob-wrap"
           style={{ ...blob.wrap, y: parallaxY[i] }}
         >
-          <motion.div
+          <div
             className={blob.className}
             style={{ width: blob.size, height: blob.size }}
-            animate={isMobile ? { opacity: [0.75, 1, 0.75] } : blob.drift}
-            transition={{
-              duration: blob.duration,
-              repeat: Infinity,
-              repeatType: 'mirror',
-              ease: 'easeInOut',
-            }}
           />
         </motion.div>
       ))}
 
-      {SPARKLES.map((s, i) => (
-        <motion.div
-          key={i}
-          className={`hero-sparkle${i % 2 === 0 ? ' sparkle-accent' : ''}`}
-          style={s.wrap}
-          animate={{
-            y: [0, -26, 0],
-            x: [0, i % 2 === 0 ? 10 : -10, 0],
-            opacity: [0.2, 0.9, 0.2],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{
-            duration: s.duration,
-            repeat: Infinity,
-            repeatType: 'mirror',
-            ease: 'easeInOut',
-            delay: s.delay,
-          }}
-        >
-          <span style={{ width: s.size, height: s.size }} />
-        </motion.div>
-      ))}
+      {!isMobile &&
+        SPARKLES.map((s, i) => (
+          <motion.div
+            key={i}
+            className={`hero-sparkle${i % 2 === 0 ? ' sparkle-accent' : ''}`}
+            style={s.wrap}
+            animate={{
+              y: [0, -26, 0],
+              x: [0, i % 2 === 0 ? 10 : -10, 0],
+              opacity: [0.2, 0.9, 0.2],
+              scale: [1, 1.3, 1],
+            }}
+            transition={{
+              duration: s.duration,
+              repeat: Infinity,
+              repeatType: 'mirror',
+              ease: 'easeInOut',
+              delay: s.delay,
+            }}
+          >
+            <span style={{ width: s.size, height: s.size }} />
+          </motion.div>
+        ))}
     </div>
   );
 }

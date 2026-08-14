@@ -54,7 +54,7 @@ export default function Shipping() {
           <Reveal delay={0.2}>
             <p className="lead">
               Buscá tu dirección o hacé clic en el mapa y consultanos por
-              WhatsApp cuándo llega tu envío.
+              WhatsApp cuánto cuesta tu envío
             </p>
           </Reveal>
         </div>

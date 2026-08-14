@@ -23,7 +23,12 @@ export default function Preloader() {
       logo.onerror = () => resolve();
       logo.src = '/images/logo.png';
     });
-    const minShown = new Promise<void>((resolve) => setTimeout(resolve, 900));
+    const isMobile =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 768px)').matches;
+    const minShown = new Promise<void>((resolve) =>
+      setTimeout(resolve, isMobile ? 500 : 900),
+    );
     const cap = new Promise<void>((resolve) => setTimeout(resolve, 2400));
 
     const startFly = () => {
