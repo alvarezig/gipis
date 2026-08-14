@@ -43,7 +43,7 @@ export default function Hero() {
             animate="visible"
           >
             <a href="#productos" className="btn btn-primary">
-              Ver nidos
+              Ver productos
             </a>
             <a href="#contacto" className="btn btn-outline">
               Contactar
