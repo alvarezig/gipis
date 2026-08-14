@@ -50,19 +50,34 @@ export default function ShippingMap() {
     const handlePick = (lat: number, lng: number, label?: string) => {
       const distKm = haversineKm(STORE_COORDS, { lat, lng });
       if (markerRef.current) markerRef.current.remove();
-      markerRef.current = L.circleMarker([lat, lng], {
+      const marker = L.circleMarker([lat, lng], {
         radius: 9,
         color: '#8a6b3f',
         weight: 2,
         fillColor: '#e0c394',
         fillOpacity: 1,
-      })
-        .addTo(map)
-        .bindTooltip(label ?? 'Tu zona', { direction: 'top' })
-        .openTooltip();
+      }).addTo(map);
+      markerRef.current = marker;
       map.panTo([lat, lng]);
       setResult({ distKm });
       setAddress(label ?? '');
+
+      if (label) {
+        marker.bindTooltip(label, { direction: 'top' }).openTooltip();
+        return;
+      }
+
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&accept-language=es`,
+      )
+        .then((res) => res.json())
+        .then((data: { display_name?: string }) => {
+          const name = data.display_name;
+          if (!name) return;
+          setAddress(name);
+          marker.bindTooltip(name, { direction: 'top' }).openTooltip();
+        })
+        .catch(() => {});
     };
 
     pickRef.current = handlePick;
@@ -126,7 +141,7 @@ export default function ShippingMap() {
       {result && (
         <div className="shipping-result">
           <p>
-            <strong>{address || 'Tu zona'}</strong> · ~
+            <strong>{address || 'Buscando dirección…'}</strong> · ~
             {Math.round(result.distKm)} km
           </p>
           <div className="shipping-actions">

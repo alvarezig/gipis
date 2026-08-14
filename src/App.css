@@ -486,10 +486,22 @@
   overflow: hidden;
   padding: 16px 0;
 }
-.marquee-track {
+.marquee-swipe {
   display: flex;
   gap: 48px;
-  width: max-content;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.marquee-swipe:active {
+  cursor: grabbing;
+}
+.marquee-swipe::-webkit-scrollbar {
+  display: none;
 }
 .marquee span {
   font-family: 'Cormorant Garamond', serif;
@@ -498,21 +510,7 @@
   text-transform: uppercase;
   color: var(--taupe-deep);
   white-space: nowrap;
-}
-.marquee-swipe {
-  display: flex;
-  gap: 40px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding: 16px 20px;
-}
-.marquee-swipe::-webkit-scrollbar {
-  display: none;
-}
-.marquee-swipe span {
   flex-shrink: 0;
-  white-space: nowrap;
 }
 
 /* ---------- Products ---------- */

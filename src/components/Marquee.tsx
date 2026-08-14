@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 
 const ITEMS = [
   'Nidos a medida',
@@ -18,32 +17,31 @@ const Track = () => (
 );
 
 export default function Marquee() {
-  const isMobile =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(max-width: 768px)').matches;
-  const swipeRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isMobile) return;
-    const el = swipeRef.current;
+    const el = ref.current;
     if (!el) return;
 
     let raf = 0;
     let paused = false;
+    let isDown = false;
     let resumeTimer: number | undefined;
     let last = performance.now();
-    const SPEED = 24;
+    let startX = 0;
+    let startScroll = 0;
+    const SPEED = 28;
 
-    const step = (now: number) => {
-      raf = requestAnimationFrame(step);
-      if (paused) {
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      if (paused || isDown) {
         last = now;
         return;
       }
-      const dt = now - last;
-      last = now;
       const max = el.scrollWidth - el.clientWidth;
       if (max <= 0) return;
+      const dt = now - last;
+      last = now;
       el.scrollLeft += (SPEED * dt) / 1000;
       if (el.scrollLeft >= max) el.scrollLeft = 0;
     };
@@ -56,47 +54,54 @@ export default function Marquee() {
       window.clearTimeout(resumeTimer);
       resumeTimer = window.setTimeout(() => {
         paused = false;
-      }, 1500);
+      }, 1200);
     };
 
+    const onDown = (e: PointerEvent) => {
+      isDown = true;
+      pause();
+      startX = e.clientX;
+      startScroll = el.scrollLeft;
+      el.setPointerCapture?.(e.pointerId);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!isDown) return;
+      el.scrollLeft = startScroll - (e.clientX - startX);
+    };
+    const onUp = () => {
+      if (!isDown) return;
+      isDown = false;
+      resume();
+    };
+
+    el.addEventListener('pointerdown', onDown);
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerup', onUp);
+    el.addEventListener('pointercancel', onUp);
     el.addEventListener('touchstart', pause, { passive: true });
     el.addEventListener('wheel', pause, { passive: true });
-    el.addEventListener('touchend', resume, { passive: true });
     el.addEventListener('scroll', resume, { passive: true });
 
-    raf = requestAnimationFrame(step);
+    raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(resumeTimer);
+      el.removeEventListener('pointerdown', onDown);
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerup', onUp);
+      el.removeEventListener('pointercancel', onUp);
       el.removeEventListener('touchstart', pause);
       el.removeEventListener('wheel', pause);
-      el.removeEventListener('touchend', resume);
       el.removeEventListener('scroll', resume);
     };
-  }, [isMobile]);
-
-  if (isMobile) {
-    return (
-      <div
-        className="marquee marquee-swipe"
-        ref={swipeRef}
-        aria-label="Características"
-      >
-        <Track />
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div className="marquee">
-      <motion.div
-        className="marquee-track"
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-      >
+      <div className="marquee-swipe" ref={ref} aria-label="Características">
         <Track />
-      </motion.div>
+      </div>
     </div>
   );
 }
