@@ -18,32 +18,18 @@ const Track = () => (
 
 export default function Marquee() {
   const swipeRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = swipeRef.current;
-    const track = trackRef.current;
-    if (!el || !track) return;
+    if (!el) return;
 
     let isDown = false;
     let startX = 0;
     let startScroll = 0;
-    let resumeTimer: number | undefined;
-
-    const pause = () => {
-      track.style.animationPlayState = 'paused';
-      window.clearTimeout(resumeTimer);
-    };
-    const resume = () => {
-      window.clearTimeout(resumeTimer);
-      resumeTimer = window.setTimeout(() => {
-        track.style.animationPlayState = 'running';
-      }, 1500);
-    };
 
     const onDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
       isDown = true;
-      pause();
       startX = e.clientX;
       startScroll = el.scrollLeft;
       el.setPointerCapture?.(e.pointerId);
@@ -53,9 +39,7 @@ export default function Marquee() {
       el.scrollLeft = startScroll - (e.clientX - startX);
     };
     const onUp = () => {
-      if (!isDown) return;
       isDown = false;
-      resume();
     };
 
     el.addEventListener('pointerdown', onDown);
@@ -64,7 +48,6 @@ export default function Marquee() {
     el.addEventListener('pointercancel', onUp);
 
     return () => {
-      window.clearTimeout(resumeTimer);
       el.removeEventListener('pointerdown', onDown);
       el.removeEventListener('pointermove', onMove);
       el.removeEventListener('pointerup', onUp);
@@ -75,7 +58,7 @@ export default function Marquee() {
   return (
     <div className="marquee">
       <div className="marquee-swipe" ref={swipeRef} aria-label="Características">
-        <div className="marquee-track" ref={trackRef}>
+        <div className="marquee-track">
           <Track />
         </div>
       </div>

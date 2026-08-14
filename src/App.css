@@ -489,7 +489,6 @@
 .marquee-swipe {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
   scrollbar-width: none;
   cursor: grab;
   user-select: none;
