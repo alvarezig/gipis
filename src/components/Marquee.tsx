@@ -31,13 +31,20 @@ export default function Marquee() {
     let raf = 0;
     let paused = false;
     let resumeTimer: number | undefined;
+    let last = performance.now();
+    const SPEED = 24;
 
-    const step = () => {
+    const step = (now: number) => {
       raf = requestAnimationFrame(step);
-      if (paused) return;
+      if (paused) {
+        last = now;
+        return;
+      }
+      const dt = now - last;
+      last = now;
       const max = el.scrollWidth - el.clientWidth;
       if (max <= 0) return;
-      el.scrollLeft += 0.8;
+      el.scrollLeft += (SPEED * dt) / 1000;
       if (el.scrollLeft >= max) el.scrollLeft = 0;
     };
 
